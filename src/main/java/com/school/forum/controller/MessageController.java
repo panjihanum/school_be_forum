@@ -26,13 +26,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/message")
 @RequiredArgsConstructor(onConstructor = @__(
         @Autowired))
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 public class MessageController {
 
     private final MessageService messageService;
 
-    @CrossOrigin
-    @GetMapping("/{room}")
+    @GetMapping("/{forumId}")
     public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable String forumId) {
         return ResponseEntity.ok(messageService.getMessage(forumId));
     }

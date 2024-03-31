@@ -49,10 +49,10 @@ public class SocketModule {
         return (client) -> {
             var params = client.getHandshakeData().getUrlParams();
             String forumId = params.get("forumId").stream().collect(Collectors.joining());
-            String username = params.get("username").stream().collect(Collectors.joining());
+            String senderId = params.get("senderId").stream().collect(Collectors.joining());
             client.joinRoom(forumId);
-            socketService.saveInfoMessage(client, String.format(Constants.WELCOME_MESSAGE, username), forumId);
-            log.info("Socket ID[{}] - forumId[{}] - username [{}]  Connected to chat module through", client.getSessionId().toString(), forumId, username);
+            socketService.saveInfoMessage(client, String.format(Constants.WELCOME_MESSAGE, senderId), forumId);
+            log.info("Socket ID[{}] - forumId[{}] - username [{}]  Connected to chat module through", client.getSessionId().toString(), forumId, senderId);
         };
 
     }
@@ -61,9 +61,9 @@ public class SocketModule {
         return client -> {
             var params = client.getHandshakeData().getUrlParams();
             String forumId = params.get("forumId").stream().collect(Collectors.joining());
-            String username = params.get("username").stream().collect(Collectors.joining());
-            socketService.saveInfoMessage(client, String.format(Constants.DISCONNECT_MESSAGE, username), forumId);
-            log.info("Socket ID[{}] - forumId[{}] - username [{}]  discnnected to chat module through", client.getSessionId().toString(), forumId, username);
+            String senderId = params.get("senderId").stream().collect(Collectors.joining());
+            socketService.saveInfoMessage(client, String.format(Constants.DISCONNECT_MESSAGE, senderId), forumId);
+            log.info("Socket ID[{}] - forumId[{}] - username [{}]  discnnected to chat module through", client.getSessionId().toString(), forumId, senderId);
         };
     }
 

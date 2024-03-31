@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.corundumstudio.socketio.SocketIOServer;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
+@Slf4j
 public class SocketIOConfig {
 
     @Value("${socket-server.host}")

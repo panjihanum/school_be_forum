@@ -35,10 +35,10 @@ public class ChatMessage {
     private UUID senderId;
 
     @Column(name = "message_type")
+    @Enumerated(EnumType.STRING)
     private MessageType messageType;
 
-    @ManyToOne
-    @JoinColumn(name = "forum_id")
-    private Forum forum;
+    @Column(name = "forum_id")
+    private UUID forumId;
 
 }

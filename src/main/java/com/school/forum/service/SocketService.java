@@ -14,6 +14,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.school.forum.constant.MessageType;
 import com.school.forum.model.ChatMessage;
 import com.school.forum.model.Forum;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +25,8 @@ public class SocketService {
     private final ForumService forumService;
     private final MessageService messageService;
 
-    public void sendSocketmessage(SocketIOClient senderClient, ChatMessage message, String room) {
-        for (SocketIOClient client : senderClient.getNamespace().getRoomOperations(room).getClients()) {
+    public void sendSocketmessage(SocketIOClient senderClient, ChatMessage message, String forumId) {
+        for (SocketIOClient client : senderClient.getNamespace().getRoomOperations(forumId).getClients()) {
             if (!client.getSessionId().equals(senderClient.getSessionId())) {
                 client.sendEvent("read_message", message);
             }
@@ -38,25 +39,24 @@ public class SocketService {
                 ChatMessage.builder()
                         .messageType(MessageType.CLIENT)
                         .content(message.getContent())
-                        .forum(message.getForum())
+                        .forumId(message.getForumId())
                         .senderId(message.getSenderId())
                         .build()
         );
 
-        sendSocketmessage(senderClient, storedMessage, message.getForum().getId().toString());
+        sendSocketmessage(senderClient, storedMessage, message.getForumId().toString());
 
     }
 
     public void saveInfoMessage(SocketIOClient senderClient, String message, String forumId) {
-        Forum forum = forumService.findById(forumId);
         ChatMessage storedMessage = messageService.saveMessage(
                 ChatMessage.builder()
                         .messageType(MessageType.SERVER)
                         .content(message)
-                        .forum(forum)
+                        .forumId(UUID.fromString(forumId))
                         .build()
         );
 
-        sendSocketmessage(senderClient, storedMessage, forum.getId().toString());
+        sendSocketmessage(senderClient, storedMessage, forumId);
     }
 }
